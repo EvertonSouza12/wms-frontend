@@ -1,0 +1,16 @@
+services:
+  wms-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: deps
+    container_name: wms_frontend_dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
