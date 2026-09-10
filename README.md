@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WMS Frontend
 
-## Getting Started
+Frontend do sistema WMS, construído com Next.js, React e TypeScript.
 
-First, run the development server:
+## Pré-requisitos
+
+- Docker instalado e em execução;
+- Docker Compose v2, disponível pelo comando `docker compose`.
+
+## Configuração com Docker
+
+### Desenvolvimento
+
+O `docker-compose.yaml` cria o serviço `wms-frontend` usando o estágio `deps` do `Dockerfile`. O código do projeto é montado em `/app`, enquanto `node_modules` e `.next` permanecem em volumes do Docker. Isso permite alterar os arquivos localmente e usar o hot reload do Next.js.
+
+Na raiz do projeto, execute:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker compose up --build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Depois, acesse [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Para executar em segundo plano:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+docker compose up --build -d
+```
 
-## Learn More
+Para acompanhar os logs:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+docker compose logs -f wms-frontend
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Para parar e remover o container:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+docker compose down
+```
 
-## Deploy on Vercel
+Se as dependências ou a configuração do Dockerfile forem alteradas, recrie a imagem sem usar o cache:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+docker compose build --no-cache
+docker compose up
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Produção
+
+O `Dockerfile` usa três estágios: instalação das dependências, build do Next.js e execução da imagem final. A configuração `output: "standalone"` do Next.js reduz o conteúdo necessário na imagem de execução.
+
+Para construir a imagem de produção:
+
+```bash
+docker build -t wms-frontend:latest .
+```
+
+Para iniciar o container:
+
+```bash
+docker run --name wms_frontend -p 3000:3000 wms-frontend:latest
+```
+
+O serviço ficará disponível em [http://localhost:3000](http://localhost:3000). Para executá-lo em segundo plano, adicione `-d` ao comando `docker run`.
+
+Para parar e remover o container de produção:
+
+```bash
+docker stop wms_frontend
+docker rm wms_frontend
+```
+
+## Comandos sem Docker
+
+Também é possível executar o projeto localmente, desde que o Node.js 20 ou superior esteja instalado:
+
+```bash
+npm ci
+npm run dev
+```
+
+Os principais scripts disponíveis são:
+
+| Comando | Descrição |
+| --- | --- |
+| `npm run dev` | Inicia o servidor de desenvolvimento |
+| `npm run build` | Gera o build de produção |
+| `npm run start` | Inicia o build de produção |
+| `npm run lint` | Executa o ESLint |
