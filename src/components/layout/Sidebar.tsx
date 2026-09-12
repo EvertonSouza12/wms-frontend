@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const menuItems = [
-  { name: 'Dashboard', href: '/', icon: '📊' },
-  { name: 'Estoque / Posições', href: '/inventory', icon: '📦' },
-  { name: 'Entradas', href: '/inbound', icon: '📥' },
-  { name: 'Saídas', href: '/outbound', icon: '📤' },
+  { name: 'Visão Geral', href: '/', icon: '📊' },
+  { name: 'Estoque', href: '/inventory', icon: '📦' },
+  { name: 'Locais de Estoque', href: '/storage-locations', icon: '🏬' },
+  { name: 'Histórico', href: '/storage-history', icon: '📜' },
 ];
 
 export function Sidebar() {
@@ -47,7 +47,6 @@ export function Sidebar() {
       <div className="p-4 border-t border-slate-800">
         <div className="bg-slate-800 p-3 rounded-lg text-xs text-slate-400">
           <p className="font-semibold text-slate-200">Armazém Central</p>
-          <p>Status: <span className="text-emerald-400 font-medium">Operacional</span></p>
         </div>
       </div>
     </aside>
